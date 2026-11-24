@@ -46,6 +46,7 @@ body {
 
 button { font-family: inherit; color: inherit; cursor: pointer; }
 button:disabled { opacity: .45; cursor: not-allowed; }
+[hidden] { display: none !important; }
 input { font-family: inherit; }
 kbd {
   font-family: var(--font-pixel);
