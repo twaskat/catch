@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#1b1030" />
+<title>PocketLife — Virtual Pet Simulator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<div id="app">
+  <div class="console" id="console">
+    <div class="shell">
+
+      <!-- ============ TOP DECK ============ -->
+      <header class="deck">
+        <div class="brand">
+          <div class="brand-dot"></div>
+          <span class="brand-name">POCKET<b>LIFE</b></span>
+          <span class="brand-sub">creature companion</span>
+        </div>
+        <nav class="hud-nav" id="nav">
+          <button class="nav-btn active" data-view="pet" title="Home"><span class="ico">🏠</span><i>HOME</i></button>
+          <button class="nav-btn" data-view="care" title="Care"><span class="ico">🍎</span><i>CARE</i></button>
+          <button class="nav-btn" data-view="games" title="Arcade"><span class="ico">🎮</span><i>ARCADE</i></button>
+          <button class="nav-btn" data-view="talk" title="Talk"><span class="ico">💬</span><i>TALK</i></button>
+          <button class="nav-btn" data-view="garden" title="Garden"><span class="ico">🌱</span><i>GARDEN</i></button>
+          <button class="nav-btn" data-view="shop" title="Shop"><span class="ico">🛍️</span><i>SHOP</i></button>
+          <button class="nav-btn" data-view="adventure" title="Adventure"><span class="ico">🗺️</span><i>WORLD</i></button>
+          <button class="nav-btn" data-view="dex" title="Encyclopedia"><span class="ico">📖</span><i>DEX</i></button>
+          <button class="nav-btn" data-view="profile" title="Profile"><span class="ico">🧬</span><i>PROFILE</i></button>
+          <button class="nav-btn" data-view="settings" title="Settings"><span class="ico">⚙️</span><i>SETTINGS</i></button>
+        </nav>
+        <div class="wallet">
+          <span class="coins">🪙 <b id="hud-coins">0</b></span>
+          <span class="lvl">LV <b id="hud-level">1</b></span>
+        </div>
+      </header>
+
+      <!-- ============ MID DECK ============ -->
+      <main class="deck-main">
+        <!-- ===== LEFT: status + inventory ===== -->
+        <aside class="side left">
+          <section class="glass card status-card">
+            <div class="card-title"><span>STATUS</span><button class="mini" id="sleep-toggle" title="Toggle sleep">😴</button></div>
+            <div class="nameplate">
+              <span id="pet-name">—</span>
+              <small id="pet-stage">EGG</small>
+            </div>
+            <div class="needs" id="needs"></div>
+            <div class="pet-state" id="pet-state">Getting ready…</div>
+            <div class="mood-row">
+              <div class="mood-chip" id="mood-chip">🙂 content</div>
+              <div class="wtile" id="weather-widget">☀️ clear</div>
+            </div>
+          </section>
+
+          <section class="glass card inv-card">
+            <div class="card-title"><span>POCKET BAG</span><span class="tiny" id="inv-count"></span></div>
+            <div class="inv-tabs" id="inv-tabs">
+              <button class="on" data-tab="food">🍎</button>
+              <button data-tab="toy">🧸</button>
+              <button data-tab="seed">🌱</button>
+              <button data-tab="wearable">👕</button>
+              <button data-tab="key">🎫</button>
+            </div>
+            <div class="inv-grid" id="inv-grid"></div>
+          </section>
+        </aside>
+
+        <!-- ===== CENTER: views ===== -->
+        <section class="center">
+          <div class="screen" id="views">
+
+            <!-- HOME VIEW -->
+            <div class="view active" data-view="pet">
+              <div class="scene" id="scene" data-weather="clear" data-day="day">
+                <div class="sky-layer">
+                  <div class="sky nebula-a"></div>
+                  <div class="sky nebula-b"></div>
+                  <div class="sun-moon" id="sun-moon"></div>
+                  <div class="stars" id="stars"></div>
+                  <div class="cloud" style="--y:12%;--s:1.5;--d:70s"></div>
+                  <div class="cloud" style="--y:26%;--s:1;--d:52s;--o:.5"></div>
+                  <div class="cloud" style="--y:8%;--s:.8;--d:88s;--o:.35"></div>
+                </div>
+                <div class="room-back">
+                  <div class="wallpaper"></div>
+                  <div class="window">
+                    <div class="window-sky"></div>
+                    <div class="window-sill"></div>
+                    <div class="window-frame"></div>
+                  </div>
+                  <div class="shelf"><span class="shelf-item">🌵</span><span class="shelf-item">📚</span><span class="shelf-item">🏺</span></div>
+                  <div class="rug"></div>
+                  <div class="floor"></div>
+                </div>
+
+                <div class="room-items" id="room-items"></div>
+
+                <div class="pet-wrap" id="pet-wrap">
+                  <div class="pet-shadow"></div>
+                  <svg class="pet-svg" id="pet-svg" viewBox="0 0 200 230" aria-hidden="true"></svg>
+                  <div class="fx" id="fx"></div>
+                  <div class="speech" id="speech"></div>
+                  <div class="emote" id="emote"></div>
+                </div>
+
+                <div class="scene-fx" id="scene-fx"></div>
+                <div class="clock-chip" id="clock-chip">--:--</div>
+                <div class="poop-layer" id="poop-layer"></div>
+              </div>
+
+              <div class="action-bar" id="action-bar">
+                <button class="act" data-act="pet">🤚<i>Pet</i></button>
+                <button class="act" data-act="cuddle">🤗<i>Cuddle</i></button>
+                <button class="act" data-act="talk">💬<i>Talk</i></button>
+                <button class="act" data-act="story">📖<i>Story</i></button>
+                <button class="act" data-act="bath">🛁<i>Bath</i></button>
+                <button class="act" data-act="play">🎾<i>Play</i></button>
+                <button class="act" data-act="teach">🎓<i>Teach</i></button>
+                <button class="act" data-act="care">🍎<i>Care</i></button>
+              </div>
+            </div>
+
+            <!-- CARE VIEW -->
+            <div class="view" data-view="care">
+              <div class="view-head"><h2>🫧 Care Center</h2><p>Everything your creature needs — delivered with love.</p></div>
+              <div class="care-grid" id="care-grid"></div>
+              <div class="glass card">
+                <div class="card-title"><span>TRICKS &amp; SKILLS</span><span class="tiny" id="trick-count"></span></div>
+                <div class="chips" id="trick-list"></div>
+              </div>
+            </div>
+
+            <!-- GAMES VIEW -->
+            <div class="view" data-view="games">
+              <div class="view-head"><h2>🎮 Arcade</h2><p id="games-sub">Pick a game. Earn coins, XP and secret items.</p></div>
+              <div class="game-grid" id="game-grid"></div>
+              <div class="glass card stage-card" id="game-stage" hidden>
+                <div class="card-title"><span id="game-title">GAME</span><button class="mini" id="game-close">✕</button></div>
+                <div class="game-meta"><span id="game-score">Score 0</span><span id="game-info"></span></div>
+                <div class="game-area" id="game-area"></div>
+                <div class="game-overlay" id="game-overlay"></div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>HOW TO PLAY</span></div>
+                <div class="help-row">🎹 Rhythm: tap <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> (or tap the pads) as notes hit the line</div>
+                <div class="help-row">🧠 Memory: find the matching pairs in as few moves as possible</div>
+                <div class="help-row">🎣 Fishing: wait for "!" then tap — precise timing = bigger fish</div>
+                <div class="help-row">🗺️ Treasure: dig in spots marked by a warm heat meter</div>
+                <div class="help-row">🏃 Obstacle: <kbd>Space</kbd> / tap to jump the rocks</div>
+                <div class="help-row">🧩 Puzzle: slide the gem to the portal</div>
+              </div>
+            </div>
+
+            <!-- TALK VIEW -->
+            <div class="view" data-view="talk">
+              <div class="view-head"><h2>💬 Conversation</h2><p>Your creature listens, remembers, and answers in its own voice.</p></div>
+              <div class="glass card talk-card">
+                <div class="chat" id="chat"></div>
+                <div class="quick-asks" id="quick-asks">
+                  <button>How are you feeling?</button>
+                  <button>I love you</button>
+                  <button>Tell me a secret</button>
+                  <button>What's your favorite food?</button>
+                  <button>Let's be brave together</button>
+                </div>
+                <form class="chat-form" id="chat-form">
+                  <input id="chat-input" maxlength="180" autocomplete="off" placeholder="Say something to your creature…" />
+                  <button class="primary" type="submit">Send</button>
+                </form>
+                <div class="ai-badge" id="ai-badge"></div>
+              </div>
+            </div>
+
+            <!-- GARDEN VIEW -->
+            <div class="view" data-view="garden">
+              <div class="view-head"><h2>🌻 Sky Garden</h2><p>Plant seeds, water them, and harvest special treats.</p></div>
+              <div class="garden-sky" id="garden-sky"></div>
+              <div class="garden-grid" id="garden-grid"></div>
+              <div class="glass card">
+                <div class="card-title"><span>SEEDS READY TO SOW</span></div>
+                <div class="seed-row" id="seed-row"></div>
+              </div>
+            </div>
+
+            <!-- SHOP VIEW -->
+            <div class="view" data-view="shop">
+              <div class="view-head"><h2>🛍️ Pocket Boutique</h2><p>Treats, toys, garden seeds, accessories and rare eggs.</p></div>
+              <div class="shop-tabs" id="shop-tabs">
+                <button class="on" data-cat="food">Treats</button>
+                <button data-cat="toy">Toys</button>
+                <button data-cat="seed">Seeds</button>
+                <button data-cat="wearable">Wearables</button>
+                <button data-cat="decor">Furniture</button>
+                <button data-cat="egg">Eggs</button>
+              </div>
+              <div class="shop-grid" id="shop-grid"></div>
+            </div>
+
+            <!-- ADVENTURE VIEW -->
+            <div class="view" data-view="adventure">
+              <div class="view-head"><h2>🗺️ Expedition</h2><p>Procedurally generated wilds. Bring your creature along.</p></div>
+              <div class="glass card adv-card" id="adv-card"></div>
+            </div>
+
+            <!-- DEX VIEW -->
+            <div class="view" data-view="dex">
+              <div class="view-head"><h2>📖 Creature Encyclopedia</h2><p>30 evolutionary forms. <span id="dex-progress"></span></p></div>
+              <div class="dex-grid" id="dex-grid"></div>
+            </div>
+
+            <!-- PROFILE VIEW -->
+            <div class="view" data-view="profile">
+              <div class="view-head"><h2>🧬 Creature Profile</h2><p>Genetics, personality, memories and history.</p></div>
+              <div class="profile-grid">
+                <div class="glass card">
+                  <div class="card-title"><span>GENOME</span><span class="tiny" id="genome-species"></span></div>
+                  <div class="genome" id="genome"></div>
+                  <div class="traits" id="traits"></div>
+                </div>
+                <div class="glass card">
+                  <div class="card-title"><span>PERSONALITY</span></div>
+                  <div class="bars" id="trait-bars"></div>
+                  <div class="card-title sub"><span>MOODS</span></div>
+                  <div class="bars" id="emotion-bars"></div>
+                </div>
+                <div class="glass card">
+                  <div class="card-title"><span>LIKES &amp; DISLIKES</span></div>
+                  <div class="likes" id="likes"></div>
+                </div>
+                <div class="glass card">
+                  <div class="card-title"><span>MEMORY ALBUM</span><span class="tiny" id="memory-count"></span></div>
+                  <div class="memory-list" id="memory-list"></div>
+                </div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>📸 PHOTO ALBUM</span></div>
+                <div class="album" id="album"></div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>🏆 ACHIEVEMENTS</span><span class="tiny" id="ach-count"></span></div>
+                <div class="ach-grid" id="ach-grid"></div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>📊 LIFETIME STATS</span></div>
+                <div class="stats-grid" id="stats-grid"></div>
+              </div>
+            </div>
+
+            <!-- SETTINGS VIEW -->
+            <div class="view" data-view="settings">
+              <div class="view-head"><h2>⚙️ Settings</h2><p>Save, load, and connect your AI companion.</p></div>
+              <div class="glass card">
+                <div class="card-title"><span>OPENROUTER AI (OPTIONAL)</span></div>
+                <p class="hint">PocketLife is fully playable without an API key — the built-in personality engine answers everything. Add a key to let a real LLM write conversations and memories.</p>
+                <label class="field"><span>API key</span><input id="api-key" type="password" placeholder="sk-or-v1-…" autocomplete="off" /></label>
+                <label class="field"><span>Model</span><input id="api-model" placeholder="openrouter/auto" /></label>
+                <div class="row"><button class="primary" id="api-save">Save AI settings</button><button id="api-test">Test connection</button></div>
+                <div class="hint small" id="api-status"></div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>GAME OPTIONS</span></div>
+                <div class="toggles">
+                  <label class="toggle"><input type="checkbox" id="opt-sound" checked /><span>Sound effects</span></label>
+                  <label class="toggle"><input type="checkbox" id="opt-relaxed" /><span>Relaxed care mode (no neglect penalties, no death)</span></label>
+                  <label class="toggle"><input type="checkbox" id="opt-motion" checked /><span>Animations</span></label>
+                  <label class="toggle"><input type="checkbox" id="opt-nightdark" checked /><span>Dim room at night</span></label>
+                </div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>DATA</span></div>
+                <div class="row">
+                  <button id="save-now">💾 Save now</button>
+                  <button id="export-save">⬇️ Export save</button>
+                  <label class="file-btn">⬆️ Import save<input type="file" id="import-save" accept=".json" hidden /></label>
+                  <button class="danger" id="reset-save">♻️ New creature</button>
+                </div>
+                <div class="hint small" id="save-status">Autosaves every few seconds.</div>
+              </div>
+              <div class="glass card">
+                <div class="card-title"><span>DAILY EVENT</span></div>
+                <div class="hint" id="event-status"></div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ===== RIGHT: journal ===== -->
+        <aside class="side right">
+          <section class="glass card journal-card">
+            <div class="card-title"><span>LIVE JOURNAL</span><span class="tiny live">● live</span></div>
+            <div id="journal"></div>
+          </section>
+          <section class="glass card" id="achievement-toast-host">
+            <div class="card-title"><span>NEXT UP</span></div>
+            <div id="next-goal"></div>
+          </section>
+        </aside>
+      </main>
+
+      <!-- ============ BOTTOM DECK ============ -->
+      <footer class="bottom">
+        <div class="btn-row">
+          <div class="hardkeys">
+            <button class="hard-btn" data-hard="care" title="Care"><span>🍎</span><small>FEED</small></button>
+            <button class="hard-btn" data-hard="play" title="Play"><span>🎾</span><small>PLAY</small></button>
+            <button class="hard-btn" data-hard="pet" title="Pet"><span>🤚</span><small>PET</small></button>
+            <button class="hard-btn" data-hard="talk" title="Talk"><span>💬</span><small>TALK</small></button>
+            <button class="hard-btn" data-hard="games" title="Arcade"><span>🎮</span><small>GAME</small></button>
+          </div>
+          <div class="speaker">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="led" id="led"></div>
+      </footer>
+
+    </div>
+  </div>
+
+  <!-- Toasts / modal -->
+  <div class="toast-host" id="toast-host"></div>
+  <div class="modal-host" id="modal-host" hidden>
+    <div class="modal glass" id="modal"></div>
+  </div>
+</div>
+<script src="js/render.js"></script>
+<script src="js/species.js"></script>
+<script src="js/games.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
